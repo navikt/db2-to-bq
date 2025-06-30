@@ -164,6 +164,7 @@
             tag = imageTag;
             config.Entrypoint = [ (lib.getExe cargo-package) ];
           };
+          db2 = pkgs.callPackage ./db2.nix { };
         };
 
         formatter =

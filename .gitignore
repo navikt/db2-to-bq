@@ -1,4 +1,9 @@
+# Rust
 /target
+
+# Rust:DB2
+/clidriver
+
+# Nix
+/result*
 /.direnv/
-.idea
-/result
