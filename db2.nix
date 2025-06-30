@@ -1,6 +1,4 @@
-{
-  stdenv,
-}:
+{ stdenv }:
 stdenv.mkDerivation (finalAttrs: rec {
   version = "12.1.0";
   pname = "db2-clidriver";

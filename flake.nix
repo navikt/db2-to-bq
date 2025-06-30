@@ -92,11 +92,23 @@
             "gitDirty";
 
         # Compile workspace code (including 3rd party dependencies)
+        db2 = pkgs.callPackage ./db2.nix { };
         cargo-package = craneLib.buildPackage (
           commonArgs
           // {
             inherit cargoArtifacts;
             meta.mainProgram = pname;
+
+            # DB2
+            nativeBuildInputs = (commonArgs.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
+            postInstall =
+              # bash
+              ''
+                wrapProgram $out/bin/${pname} \
+                  --suffix PATH : "${lib.makeBinPath [ db2 ]}" \
+                  --suffix LD_LIBRARY_PATH : "${lib.makeBinPath [ db2 ]}" \
+                  --suffix IBM_DB_HOME : "${db2}"
+              '';
           }
         );
         cargo-audit = craneLib.cargoAudit {
@@ -137,6 +149,8 @@
               # Editor stuffs
               lldb
               rust-analyzer
+
+              dive # For docker image inspection
             ]
             ++ lib.optionals stdenv.isDarwin [
               darwin.apple_sdk.frameworks.Security
@@ -159,12 +173,12 @@
             in
             pkgs.writeText "spec.yaml" yamlContent;
 
-          docker = pkgs.dockerTools.buildImage {
+          docker = pkgs.dockerTools.buildLayeredImage {
             name = pname;
             tag = imageTag;
             config.Entrypoint = [ (lib.getExe cargo-package) ];
           };
-          db2 = pkgs.callPackage ./db2.nix { };
+          inherit db2;
         };
 
         formatter =
