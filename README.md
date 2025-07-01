@@ -11,3 +11,5 @@ So let's automate/simplify the Extraction of ETL for them!
 1. [ ] Upload the targeted database table to targeted bigquery
    1. [ ] Upload only diff in table
    1. [ ] Upload multiple tables
+1. [ ] Allow for different versions of DB2 / its driver?
+1. [ ] Allow upload to postgres?
