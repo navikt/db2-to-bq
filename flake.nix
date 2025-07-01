@@ -141,6 +141,10 @@
             cargo-sbom
             cargo-audit
           ];
+
+          LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${lib.makeBinPath [ db2 ]}";
+          IBM_DB_HOME = "${db2}";
+
           packages =
             with pkgs;
             [
@@ -155,7 +159,8 @@
             ++ lib.optionals stdenv.isDarwin [
               darwin.apple_sdk.frameworks.Security
               darwin.apple_sdk.frameworks.SystemConfiguration
-            ];
+            ]
+            ++ [ db2 ];
         };
 
         packages = rec {
